@@ -1,0 +1,53 @@
+cabal-version:       2.4
+name:                fc-crypto
+version:             0.0.0.0
+synopsis:            Solution the Forgotten Circles cryptogram
+description:         Solution the Forgotten Circles cryptogram
+license:             MIT
+license-file:        LICENSE
+author:              Jason Whittle
+maintainer:          Jason Whittle <jason.whittle@gmail.com>
+copyright:           2022 Jason Whittle
+category:            Game
+build-type:          Simple
+extra-doc-files:     README.md
+                     CHANGELOG.md
+tested-with:         GHC == 8.8.3
+
+common common-options
+  build-depends:       base ^>= 4.13.0.0
+                     , rio
+  
+  mixins:              base hiding (Prelude)
+                     , rio (RIO as Prelude)
+  
+  ghc-options:         -Wall
+                       -Wcompat
+                       -Widentities
+                       -Wincomplete-uni-patterns
+                       -Wincomplete-record-updates
+  if impl(ghc >= 8.0)
+    ghc-options:       -Wredundant-constraints
+  if impl(ghc >= 8.2)
+    ghc-options:       -fhide-source-paths
+  if impl(ghc >= 8.4)
+    ghc-options:       -Wmissing-export-lists
+                       -Wpartial-fields
+  if impl(ghc >= 8.8)
+    ghc-options:       -Wmissing-deriving-strategies
+
+  default-language:    Haskell2010
+
+library
+  import:              common-options
+  hs-source-dirs:      src
+  exposed-modules:     FcCrypto
+
+executable fc-crypto
+  import:              common-options
+  hs-source-dirs:      app
+  main-is:             Main.hs
+  build-depends:       fc-crypto
+  ghc-options:         -threaded
+                       -rtsopts
+                       -with-rtsopts=-N
