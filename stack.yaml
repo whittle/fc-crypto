@@ -1,1 +1,13 @@
-resolver: lts-15.5
+resolver: lts-18.25
+
+extra-deps:
+- active-0.2.0.15
+- diagrams-1.4.0.1
+- diagrams-contrib-1.4.4
+- diagrams-core-1.5.0
+- diagrams-lib-1.4.4
+- diagrams-svg-1.4.3
+- dual-tree-0.2.3.0
+- force-layout-0.4.0.6
+- monoid-extras-0.6.1
+- svg-builder-0.1.1

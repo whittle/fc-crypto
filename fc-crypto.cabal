@@ -1,8 +1,8 @@
 cabal-version:       2.4
 name:                fc-crypto
 version:             0.0.0.0
-synopsis:            Solution the Forgotten Circles cryptogram
-description:         Solution the Forgotten Circles cryptogram
+synopsis:            Solver for the Forgotten Circles cryptogram
+description:         Solver for the Forgotten Circles cryptogram
 license:             MIT
 license-file:        LICENSE
 author:              Jason Whittle
@@ -12,15 +12,15 @@ category:            Game
 build-type:          Simple
 extra-doc-files:     README.md
                      CHANGELOG.md
-tested-with:         GHC == 8.8.3
+tested-with:         GHC == 8.10.7
 
 common common-options
-  build-depends:       base ^>= 4.13.0.0
+  build-depends:       base ^>= 4.14.0.0
                      , rio
-  
-  mixins:              base hiding (Prelude)
-                     , rio (RIO as Prelude)
-  
+                     , array
+                     , diagrams-lib
+                     , diagrams-svg
+
   ghc-options:         -Wall
                        -Wcompat
                        -Widentities
@@ -42,6 +42,9 @@ library
   import:              common-options
   hs-source-dirs:      src
   exposed-modules:     FcCrypto
+                       FcCrypto.Glyph
+                       FcCrypto.Glyph.Diagram
+                       FcCrypto.Glyph.Known
 
 executable fc-crypto
   import:              common-options
