@@ -18,6 +18,7 @@ common common-options
   build-depends:       base ^>= 4.14.0.0
                      , rio
                      , array
+                     , attoparsec
                      , diagrams-lib
                      , diagrams-svg
 
@@ -31,8 +32,7 @@ common common-options
   if impl(ghc >= 8.2)
     ghc-options:       -fhide-source-paths
   if impl(ghc >= 8.4)
-    ghc-options:       -Wmissing-export-lists
-                       -Wpartial-fields
+    ghc-options:       -Wpartial-fields
   if impl(ghc >= 8.8)
     ghc-options:       -Wmissing-deriving-strategies
 
@@ -41,10 +41,13 @@ common common-options
 library
   import:              common-options
   hs-source-dirs:      src
+  if impl(ghc >= 8.4)
+    ghc-options:       -Wmissing-export-lists
   exposed-modules:     FcCrypto
                        FcCrypto.Glyph
                        FcCrypto.Glyph.Diagram
                        FcCrypto.Glyph.Known
+                       FcCrypto.Glyph.Parser
 
 executable fc-crypto
   import:              common-options
@@ -54,3 +57,18 @@ executable fc-crypto
   ghc-options:         -threaded
                        -rtsopts
                        -with-rtsopts=-N
+
+test-suite fc-crypto-test
+  import:              common-options
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Driver.hs
+  build-depends:       fc-crypto
+                     , tasty
+                     , tasty-discover
+                     , tasty-hunit
+  ghc-options:         -threaded
+                       -rtsopts
+                       -with-rtsopts=-N
+                       -Wno-missing-export-lists
+  other-modules:       FcCrypto.Glyph.ParserTest
