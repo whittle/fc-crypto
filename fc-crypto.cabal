@@ -54,6 +54,7 @@ executable fc-crypto
   hs-source-dirs:      app
   main-is:             Main.hs
   build-depends:       fc-crypto
+                     , split
   ghc-options:         -threaded
                        -rtsopts
                        -with-rtsopts=-N

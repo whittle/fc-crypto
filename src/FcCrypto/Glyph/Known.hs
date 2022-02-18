@@ -4,6 +4,7 @@
 module FcCrypto.Glyph.Known
   ( yo
   , co
+  , mkArray
   ) where
 
 import RIO

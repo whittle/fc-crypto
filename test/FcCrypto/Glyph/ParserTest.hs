@@ -6,7 +6,7 @@ import RIO
 import Data.Array (listArray)
 import Data.Attoparsec.Text (endOfInput, parseOnly)
 import qualified FcCrypto.Glyph.Known as Known
-import FcCrypto.Glyph (glyphBounds)
+import FcCrypto.Glyph (Glyph(..), glyphBounds)
 import FcCrypto.Glyph.Parser
 import Test.Tasty.HUnit
 
@@ -61,6 +61,10 @@ unit_parseY :: IO ()
 unit_parseY = parseOnly (horzLine (0,3) <* endOfInput) "+--+--\n"
           @?= Right (listArray (0,3) [True,True,False,False])
 
+unit_parseZ :: IO ()
+unit_parseZ = parseOnly (vertLine (0,4) <* endOfInput) "      |     |\n"
+          @?= Right (listArray (0,4) [False,False,True,False,True])
+
 yoText :: Text
 yoText = "*           *\n\
          \      |      \n\
@@ -82,3 +86,25 @@ coText = "*           *\n\
          \         +-- \n\
          \         |   \n\
          \*           *\n"
+
+text3 :: Text
+text3 = "*           *\n\
+        \      |\n\
+        \    --+--\n\
+        \      |     |\n\
+        \ -----+   --+\n\
+        \      |     |\n\
+        \    --+--+  |\n\
+        \      |  |  |\n\
+        \*        +--*\n"
+
+f :: Bool
+f = False
+t :: Bool
+t = True
+
+unit_parseText3 :: IO ()
+unit_parseText3 = parseOnly (glyph glyphBounds) text3 @?= Right g
+  where g = Glyph { glyphVert = Known.mkArray [[f,f,f,f], [f,f,f,f], [t,t,t,t], [f,f,f,t], [f,t,t,t]]
+                  , glyphHorz = Known.mkArray [[f,f,f,f], [f,t,t,f], [t,t,f,t], [f,t,t,f], [f,f,f,t]]
+                  }

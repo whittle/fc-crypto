@@ -46,7 +46,7 @@ type Line = Array Word8 Bool
 
 termLine :: GlyphIx -> Parser Line
 termLine b = fmap (listArray b) $
-  char '*' *> (hrule `sepBy` anyChar) <* char '*' <* endOfLine
+  char '*' *> (hrule `sepBy` (notChar '\n')) <* char '*' <* endOfLine
 
 vertLine :: GlyphIx -> Parser Line
 vertLine b = fmap (listArray b . (<> L.repeat False)) $
@@ -54,7 +54,7 @@ vertLine b = fmap (listArray b . (<> L.repeat False)) $
 
 horzLine :: GlyphIx -> Parser Line
 horzLine b = fmap (listArray b . (<> L.repeat False)) $
-  anyChar *> (hrule `sepBy` anyChar) <* (endOfLine <|> (anyChar >> endOfLine))
+  notChar '\n' *> (hrule `sepBy` (notChar '\n')) <* manyTill (notChar '\n') endOfLine
 
 hrule :: Parser Bool
 hrule = ("--" *> pure True)
@@ -62,4 +62,4 @@ hrule = ("--" *> pure True)
 
 vrule :: Parser Bool
 vrule = (char '|' *> pure True)
-    <|> (space *> pure False)
+    <|> (char ' ' *> pure False)
