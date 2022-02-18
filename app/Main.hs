@@ -18,7 +18,7 @@ readAndRender fp k = do
     Right gs -> return $ drawGrid $ chunksOf k gs
 
 drawGrid :: [[Glyph Bool]] -> Diagram B
-drawGrid = vsep 1 . map (hsep 0.5 . map drawGlyph)
+drawGrid = vsep 1 . map (hsep 0.5 . map (frame 0.2 . alignT . drawGlyph))
 
 main :: IO ()
 main = mainWith readAndRender

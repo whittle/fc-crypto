@@ -21,6 +21,7 @@ common common-options
                      , attoparsec
                      , diagrams-lib
                      , diagrams-svg
+                     , lens
 
   ghc-options:         -Wall
                        -Wcompat

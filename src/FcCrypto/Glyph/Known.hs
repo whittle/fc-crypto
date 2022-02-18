@@ -4,11 +4,10 @@
 module FcCrypto.Glyph.Known
   ( yo
   , co
-  , mkArray
   ) where
 
-import RIO
-import Data.Array
+import RIO hiding (view)
+import Control.Lens
 import FcCrypto.Glyph
 
 
@@ -17,17 +16,12 @@ f = False
 t :: Bool
 t = True
 
-mkArray :: [[e]] -> Array GlyphIx e
-mkArray = listArray glyphBounds . concat
-
 yo :: Glyph Bool
-yo = Glyph
-  { glyphVert = mkArray [[f,f,f,f], [f,t,t,t], [t,f,f,f], [f,t,t,t], [f,t,f,f]]
-  , glyphHorz = mkArray [[f,f,f,f], [t,t,t,t], [f,f,f,t], [f,f,f,t], [t,t,f,f]]
-  }
+yo = ArrayGlyph
+  (view (from verticals) [[f,f,f,f], [f,t,t,t], [t,f,f,f], [f,t,t,t], [f,t,f,f]])
+  (view (from horizontals) [[f,f,f,f], [t,t,t,t], [f,f,f,t], [f,f,f,t], [t,t,f,f]])
 
 co :: Glyph Bool
-co = Glyph
-  { glyphVert = mkArray [[f,t,f,f], [f,t,t,f], [f,f,f,f], [f,t,t,t], [t,t,f,f]]
-  , glyphHorz = mkArray [[f,f,f,f], [t,t,t,f], [t,t,t,t], [f,f,f,t], [f,f,f,f]]
-  }
+co = ArrayGlyph
+  (view (from verticals) [[f,t,f,f], [f,t,t,f], [f,f,f,f], [f,t,t,t], [t,t,f,f]])
+  (view (from horizontals) [[f,f,f,f], [t,t,t,f], [t,t,t,t], [f,f,f,t], [f,f,f,f]])

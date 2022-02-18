@@ -23,7 +23,10 @@ glyphs :: (GlyphIx, GlyphIx) -> Parser [Glyph Bool]
 glyphs bs = glyph bs `sepBy` char '\n'
 
 glyph :: (GlyphIx, GlyphIx) -> Parser (Glyph Bool)
-glyph bs@((i1, j1), (i2, j2)) = do
+glyph bs = (".\n" *> pure PeriodGlyph) <|> arrayGlyph bs
+
+arrayGlyph :: (GlyphIx, GlyphIx) -> Parser (Glyph Bool)
+arrayGlyph bs@((i1, j1), (i2, j2)) = do
   let hAssocs k = assocs . ixmap ((k,j1),(k,j2)) snd
       vAssocs k = assocs . ixmap ((i1,k),(i2,k)) fst
   -- FIXME: these should be based on the array indices
@@ -36,10 +39,9 @@ glyph bs@((i1, j1), (i2, j2)) = do
   l7 <- hAssocs 3 <$> horzLine (j1,j2)
   l8 <- vAssocs 3 <$> vertLine (i1,i2)
   l9 <- hAssocs 4 <$> termLine (j1,j2)
-  pure $ Glyph
-    { glyphVert = array bs $ concat [l2, l4, l6, l8]
-    , glyphHorz = array bs $ concat [l1, l3, l5, l7, l9]
-    }
+  pure $ ArrayGlyph
+    (Vertical $ array bs $ concat [l2, l4, l6, l8])
+    (Horizontal $ array bs $ concat [l1, l3, l5, l7, l9])
 
 
 type Line = Array Word8 Bool
