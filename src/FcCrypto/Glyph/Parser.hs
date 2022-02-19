@@ -1,7 +1,12 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 
--- |
+-- | A parser for extracting tractable representations of glyphs from a file of
+-- ASCII art pictures of those glyphs. Asterisks are the registration dots at
+-- the corners of glyphs, pipes are vertical segments, pairs of hyphens are
+-- horizontal segments, and characters present at grid junctions are ignored.
+-- The special case of a period glyph is represented as a period on a line by
+-- itself.
 module FcCrypto.Glyph.Parser
   ( parseOnlyGlyphs
   , glyphs
@@ -20,17 +25,18 @@ import qualified RIO.List as L
 import FcCrypto.Glyph
 
 
--- | A pre-packaged parser run action for files of glyphs.
+-- | A pre-packaged parser run action.
 parseOnlyGlyphs :: Text -> Either String [Glyph Bool]
 parseOnlyGlyphs = parseOnly $ glyphs glyphBounds <* endOfInput
 
 -- | Parser for glyphs separated by single blank lines.
 glyphs :: (GlyphIx, GlyphIx) -> Parser [Glyph Bool]
-glyphs bs = glyph bs `sepBy` char '\n'
+glyphs bs = glyph bs `sepBy` endOfLine
 
 -- | Parser for an individual glyph.
 glyph :: (GlyphIx, GlyphIx) -> Parser (Glyph Bool)
-glyph bs = (".\n" *> pure PeriodGlyph) <|> arrayGlyph bs
+glyph bs = (char '.' *> endOfLine *> pure PeriodGlyph)
+       <|> arrayGlyph bs
 
 arrayGlyph :: (GlyphIx, GlyphIx) -> Parser (Glyph Bool)
 arrayGlyph bs@((i1, j1), (i2, j2)) = do
@@ -55,7 +61,7 @@ type Line = Array Word8 Bool
 
 termLine :: GlyphIx -> Parser Line
 termLine b = fmap (listArray b) $
-  char '*' *> (hrule `sepBy` (notChar '\n')) <* char '*' <* endOfLine
+  char '*' *> (hrule `sepBy` notEOL) <* char '*' <* endOfLine
 
 vertLine :: GlyphIx -> Parser Line
 vertLine b = fmap (listArray b . (<> L.repeat False)) $
@@ -63,7 +69,7 @@ vertLine b = fmap (listArray b . (<> L.repeat False)) $
 
 horzLine :: GlyphIx -> Parser Line
 horzLine b = fmap (listArray b . (<> L.repeat False)) $
-  notChar '\n' *> (hrule `sepBy` (notChar '\n')) <* manyTill (notChar '\n') endOfLine
+  notEOL *> (hrule `sepBy` notEOL) <* (endOfLine <|> (anyChar >> endOfLine))
 
 hrule :: Parser Bool
 hrule = ("--" *> pure True)
@@ -72,3 +78,6 @@ hrule = ("--" *> pure True)
 vrule :: Parser Bool
 vrule = (char '|' *> pure True)
     <|> (char ' ' *> pure False)
+
+notEOL :: Parser ()
+notEOL = satisfy (not . isEndOfLine) >> pure ()
