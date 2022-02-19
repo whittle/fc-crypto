@@ -3,7 +3,7 @@ module Main (main) where
 import RIO
 import Diagrams
 import Diagrams.Backend.SVG.CmdLine
-import FcCrypto.Diagram (drawGrid, labelGlyph)
+import FcCrypto.Diagram (addLabel, drawGrid)
 import FcCrypto.Glyph (Glyph)
 import FcCrypto.Glyph.Diagram (drawGlyph)
 import qualified FcCrypto.Glyph.Known as Known
@@ -21,4 +21,4 @@ process fp k = do
   return $ drawGrid k $ map drawLabeledGlyph lgs
 
 drawLabeledGlyph :: (Glyph Bool, Maybe Text) -> Diagram B
-drawLabeledGlyph (g, l) = labelGlyph l $ drawGlyph g
+drawLabeledGlyph (g, l) = addLabel l $ drawGlyph g

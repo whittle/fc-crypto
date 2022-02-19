@@ -2,8 +2,8 @@
 
 -- | Drawing utilities not directly related to glyphs.
 module FcCrypto.Diagram
-  ( drawGrid
-  , labelGlyph
+  ( addLabel
+  , drawGrid
   ) where
 
 
@@ -26,7 +26,7 @@ kerning = 0.5
 
 -- | Vertical separation between rows of glyphs
 leading :: Double
-leading = 1.2
+leading = 0.5
 
 
 -- | Sized for laying out labeled glyphs in a grid. First argument is the width
@@ -34,7 +34,8 @@ leading = 1.2
 drawGrid :: Int -> [Diagram B] -> Diagram B
 drawGrid k = frame border . vsep leading . map (hsep kerning) . chunksOf k . map alignT
 
--- | Add a possible label beneath a diagram.
-labelGlyph :: Maybe Text -> Diagram B -> Diagram B
-labelGlyph Nothing g = g
-labelGlyph (Just l) g = g === alignedText 0.5 1 (T.unpack l)
+-- | Add a possible label below a diagram. Does not add space below a diagram if
+-- no label is present.
+addLabel :: Maybe Text -> Diagram B -> Diagram B
+addLabel Nothing = id
+addLabel (Just l) = extrudeEnvelope unit_Y . (=== alignedText 0.5 1 (T.unpack l))
