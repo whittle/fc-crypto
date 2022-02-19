@@ -58,7 +58,7 @@ av = ArrayGlyph
 df :: Glyph Bool
 df = ArrayGlyph
   (from verticals `view` [[f,f,f,f], [f,f,f,t], [f,t,t,t], [f,t,t,t], [f,t,t,f]])
-  (from horizontals `view` [[f,f,f,f], [f,f,f,t], [f,t,f,f], [f,f,f,t], [f,f,f,f]])
+  (from horizontals `view` [[f,f,f,f], [f,f,f,t], [f,t,f,f], [f,t,t,t], [f,f,f,f]])
 
 co :: Glyph Bool
 co = ArrayGlyph
