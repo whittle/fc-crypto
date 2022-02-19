@@ -11,9 +11,10 @@ module FcCrypto.Glyph.Diagram
   ) where
 
 import RIO
-import qualified FcCrypto.Glyph as G
-import Diagrams.Prelude hiding (view)
+import Data.Colour (black)
+import Diagrams
 import Diagrams.Backend.SVG
+import qualified FcCrypto.Glyph as G
 import qualified RIO.List as L
 
 

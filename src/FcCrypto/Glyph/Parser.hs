@@ -3,7 +3,8 @@
 
 -- |
 module FcCrypto.Glyph.Parser
-  ( glyphs
+  ( parseOnlyGlyphs
+  , glyphs
   , glyph
   , termLine
   , vertLine
@@ -19,9 +20,15 @@ import qualified RIO.List as L
 import FcCrypto.Glyph
 
 
+-- | A pre-packaged parser run action for files of glyphs.
+parseOnlyGlyphs :: Text -> Either String [Glyph Bool]
+parseOnlyGlyphs = parseOnly $ glyphs glyphBounds <* endOfInput
+
+-- | Parser for glyphs separated by single blank lines.
 glyphs :: (GlyphIx, GlyphIx) -> Parser [Glyph Bool]
 glyphs bs = glyph bs `sepBy` char '\n'
 
+-- | Parser for an individual glyph.
 glyph :: (GlyphIx, GlyphIx) -> Parser (Glyph Bool)
 glyph bs = (".\n" *> pure PeriodGlyph) <|> arrayGlyph bs
 

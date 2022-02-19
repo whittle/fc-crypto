@@ -19,6 +19,7 @@ common common-options
                      , rio
                      , array
                      , attoparsec
+                     , colour
                      , diagrams-lib
                      , diagrams-svg
                      , lens
@@ -44,7 +45,9 @@ library
   hs-source-dirs:      src
   if impl(ghc >= 8.4)
     ghc-options:       -Wmissing-export-lists
+  build-depends:       split
   exposed-modules:     FcCrypto
+                       FcCrypto.Diagram
                        FcCrypto.Glyph
                        FcCrypto.Glyph.Diagram
                        FcCrypto.Glyph.Known
@@ -55,7 +58,6 @@ executable fc-crypto
   hs-source-dirs:      app
   main-is:             Main.hs
   build-depends:       fc-crypto
-                     , split
   ghc-options:         -threaded
                        -rtsopts
                        -with-rtsopts=-N
