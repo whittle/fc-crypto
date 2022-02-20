@@ -47,6 +47,7 @@ library
     ghc-options:       -Wmissing-export-lists
   build-depends:       split
   exposed-modules:     FcCrypto
+                       FcCrypto.Commands
                        FcCrypto.Diagram
                        FcCrypto.Glyph
                        FcCrypto.Glyph.Diagram
@@ -57,6 +58,24 @@ executable fc-crypto
   import:              common-options
   hs-source-dirs:      app
   main-is:             Main.hs
+  build-depends:       fc-crypto
+  ghc-options:         -threaded
+                       -rtsopts
+                       -with-rtsopts=-N
+
+executable list-known
+  import:              common-options
+  hs-source-dirs:      app
+  main-is:             ListKnown.hs
+  build-depends:       fc-crypto
+  ghc-options:         -threaded
+                       -rtsopts
+                       -with-rtsopts=-N
+
+executable render-message
+  import:              common-options
+  hs-source-dirs:      app
+  main-is:             RenderMessage.hs
   build-depends:       fc-crypto
   ghc-options:         -threaded
                        -rtsopts

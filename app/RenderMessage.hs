@@ -4,8 +4,8 @@ module Main (main) where
 
 import RIO
 import Diagrams.Backend.CmdLine (mainWith)
-import FcCrypto.Commands (labelKnown)
+import FcCrypto.Commands (renderMessage)
 
 
 main :: IO ()
-main = mainWith labelKnown
+main = mainWith renderMessage
