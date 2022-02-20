@@ -35,7 +35,7 @@ glyphs bs = glyph bs `sepBy` endOfLine
 
 -- | Parser for an individual glyph.
 glyph :: (GlyphIx, GlyphIx) -> Parser (Glyph Bool)
-glyph bs = (char '.' *> endOfLine *> pure PeriodGlyph)
+glyph bs = char '.' *> endOfLine *> pure PeriodGlyph
        <|> arrayGlyph bs
 
 arrayGlyph :: (GlyphIx, GlyphIx) -> Parser (Glyph Bool)
@@ -61,7 +61,7 @@ type Line = Array Word8 Bool
 
 termLine :: GlyphIx -> Parser Line
 termLine b = fmap (listArray b) $
-  char '*' *> (hrule `sepBy` notEOL) <* char '*' <* endOfLine
+  char '*' *> hrule `sepBy` notEOL <* char '*' <* endOfLine
 
 vertLine :: GlyphIx -> Parser Line
 vertLine b = fmap (listArray b . (<> L.repeat False)) $
@@ -69,15 +69,15 @@ vertLine b = fmap (listArray b . (<> L.repeat False)) $
 
 horzLine :: GlyphIx -> Parser Line
 horzLine b = fmap (listArray b . (<> L.repeat False)) $
-  notEOL *> (hrule `sepBy` notEOL) <* (endOfLine <|> (anyChar >> endOfLine))
+  notEOL *> hrule `sepBy` notEOL <* optional notEOL <* endOfLine
 
 hrule :: Parser Bool
-hrule = ("--" *> pure True)
-    <|> ("  " *> pure False)
+hrule = "--" *> pure True
+    <|> "  " *> pure False
 
 vrule :: Parser Bool
-vrule = (char '|' *> pure True)
-    <|> (char ' ' *> pure False)
+vrule = char '|' *> pure True
+    <|> char ' ' *> pure False
 
 notEOL :: Parser ()
 notEOL = satisfy (not . isEndOfLine) >> pure ()
