@@ -65,6 +65,15 @@ executable fc-crypto
                        -rtsopts
                        -with-rtsopts=-N
 
+executable list-alphabet
+  import:              common-options
+  hs-source-dirs:      app
+  main-is:             ListAlphabet.hs
+  build-depends:       fc-crypto
+  ghc-options:         -threaded
+                       -rtsopts
+                       -with-rtsopts=-N
+
 executable list-known
   import:              common-options
   hs-source-dirs:      app
@@ -92,8 +101,10 @@ test-suite fc-crypto-test
                      , tasty
                      , tasty-discover
                      , tasty-hunit
+                     , tasty-quickcheck
   ghc-options:         -threaded
                        -rtsopts
                        -with-rtsopts=-N
                        -Wno-missing-export-lists
   other-modules:       FcCrypto.Glyph.ParserTest
+                       FcCrypto.Glyph.PropertyTest

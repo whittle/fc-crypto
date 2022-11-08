@@ -5,14 +5,10 @@
 module FcCrypto.Symbol.Known
   ( identify
   , all
-  , yo
-  , uh
-  , av
-  , df
-  , co
-  , le
-  , ho
-  , ed
+  , period
+  , yo, uh, av, df, co, le, ho, ed
+  , ew, or, it, nm, rw, ag, np, ta
+  , m_, o_, r_, t_, i_, f_, e_
   ) where
 
 import RIO hiding (all, or, view)
@@ -33,6 +29,7 @@ all =
   [ yo, uh, av, df, co, le, ho, ed
   , period
   , ew, or, it, nm, rw, ag, np, ta
+  , m_, o_, r_, t_, i_, f_, e_
   ]
 
 f :: Bool
@@ -122,3 +119,38 @@ ta :: Symbol Identity Bool
 ta = Symbol (Identity $ Composed 'T' 'A') $ ArrayGlyph
   (from verticals `view` [[t,t,t,t], [f,t,t,t], [f,t,t,f], [f,f,f,f], [f,f,f,f]])
   (from horizontals `view` [[f,f,f,f], [t,t,t,f], [f,f,f,f], [t,t,t,t], [f,f,f,f]])
+
+m_ :: Symbol Identity Bool
+m_ = Symbol (Identity $ Simple 'M') $ ArrayGlyph
+  (from verticals `view` [[f,t,f,f], [f,t,t,f], [f,f,t,f], [f,t,t,t], [f,t,f,f]])
+  (from horizontals `view` [[f,f,f,f], [t,f,f,t], [f,t,f,f], [f,f,t,f], [f,f,f,f]])
+
+o_ :: Symbol Identity Bool
+o_ = Symbol (Identity $ Simple 'O') $ ArrayGlyph
+  (from verticals `view` [[f,f,f,f], [f,f,f,f], [f,f,f,f], [f,t,t,t], [f,t,f,f]])
+  (from horizontals `view` [[f,f,f,f], [t,t,t,f], [f,f,f,t], [f,f,f,t], [f,f,f,f]])
+
+r_ :: Symbol Identity Bool
+r_ = Symbol (Identity $ Simple 'R') $ ArrayGlyph
+  (from verticals `view` [[f,f,f,f], [f,f,f,f], [f,f,f,f], [t,t,t,f], [f,f,f,f]])
+  (from horizontals `view` [[f,f,f,t], [f,f,t,f], [f,f,t,t], [f,t,t,f], [f,f,f,f]])
+
+t_ :: Symbol Identity Bool
+t_ = Symbol (Identity $ Simple 'T') $ ArrayGlyph
+  (from verticals `view` [[t,t,f,f], [f,f,t,t], [f,t,t,f], [f,f,f,f], [f,f,f,f]])
+  (from horizontals `view` [[f,f,f,f], [t,t,t,f], [f,f,f,f], [f,t,t,t], [f,f,f,f]])
+
+i_ :: Symbol Identity Bool
+i_ = Symbol (Identity $ Simple 'I') $ ArrayGlyph
+  (from verticals `view` [[f,f,f,f], [f,f,f,f], [f,f,f,t], [t,t,t,f], [t,f,f,f]])
+  (from horizontals `view` [[f,f,t,t], [f,f,t,t], [f,f,f,f], [f,f,t,t], [f,f,t,t]])
+
+f_ :: Symbol Identity Bool
+f_ = Symbol (Identity $ Simple 'F') $ ArrayGlyph
+  (from verticals `view` [[f,f,f,f], [f,f,f,f], [f,t,t,t], [f,f,f,t], [f,f,f,f]])
+  (from horizontals `view` [[f,f,f,f], [f,f,f,f], [f,t,f,f], [f,t,t,t], [f,f,f,f]])
+
+e_ :: Symbol Identity Bool
+e_ = Symbol (Identity $ Simple 'E') $ ArrayGlyph
+  (from verticals `view` [[f,f,f,f], [f,f,f,f], [t,t,t,t], [f,f,f,f], [f,f,f,f]])
+  (from horizontals `view` [[f,f,f,f], [f,t,f,f], [t,t,f,f], [f,f,t,f], [f,f,f,f]])

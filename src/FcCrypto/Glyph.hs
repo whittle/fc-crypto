@@ -15,6 +15,8 @@ module FcCrypto.Glyph
   , verticals
   , horizontals
   , Glyph(..)
+  , difference
+  , intersection
   ) where
 
 import RIO
@@ -59,6 +61,12 @@ horizontals :: Iso' (Segments 'Horz a) [[a]]
 horizontals = iso (\(Horizontal a) -> arrayToLists a)
                   (Horizontal . listArray glyphBounds . concat)
 
+arrayToLists :: Array GlyphIx e -> [[e]]
+arrayToLists a = L.unfoldr go $ elems a
+  where go es = case L.genericSplitAt (fst $ snd $ bounds a) es of
+          ([], _) -> Nothing
+          (is, xs) -> Just (is, xs)
+
 
 {- | Represents all of the line positions in a single glyph. The possible values
    present at those positions are parameterized.
@@ -85,15 +93,28 @@ horizontals = iso (\(Horizontal a) -> arrayToLists a)
    |     |     |     |     |
    .(4,0) (4,1) (4,2) (4,3).
 
-   Glyphs can also just be a dot, which is assumed to be a sentance separator.
+   Glyphs can also just be a dot, which is assumed to be a sentence separator.
 -}
 data Glyph e
   = PeriodGlyph
   | ArrayGlyph (Segments 'Vert e) (Segments 'Horz e)
   deriving stock (Eq, Show)
 
-arrayToLists :: Array GlyphIx e -> [[e]]
-arrayToLists a = L.unfoldr go $ elems a
-  where go es = case L.genericSplitAt (fst $ snd $ bounds a) es of
-          ([], _) -> Nothing
-          (is, xs) -> Just (is, xs)
+instance Functor Glyph where
+  fmap _ PeriodGlyph = PeriodGlyph
+  fmap f (ArrayGlyph (Vertical v) (Horizontal h)) =
+    ArrayGlyph (Vertical $ f <$> v) (Horizontal $ f <$> h)
+
+instance Applicative Glyph where
+  pure e = ArrayGlyph (Vertical $ f e) (Horizontal $ f e)
+    where f = listArray glyphBounds . replicate 20
+  (ArrayGlyph (Vertical v1) (Horizontal h1)) <*> (ArrayGlyph (Vertical v2) (Horizontal h2)) = ArrayGlyph (Vertical $ v1 `apAry` v2) (Horizontal $ h1 `apAry` h2)
+    where apAry a1 a2 = listArray glyphBounds $ zipWith ($) (toList a1) (toList a2)
+  _ <*> _ = PeriodGlyph
+
+
+difference :: Glyph Bool -> Glyph Bool -> Glyph Bool
+difference = liftA2 (\a b -> a && not b)
+
+intersection :: Glyph Bool -> Glyph Bool -> Glyph Bool
+intersection = liftA2 (&&)
