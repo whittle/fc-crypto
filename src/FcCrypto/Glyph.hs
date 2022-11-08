@@ -84,6 +84,8 @@ horizontals = iso (\(Horizontal a) -> arrayToLists a)
     (3,0) (3,1) (3,2) (3,3)
    |     |     |     |     |
    .(4,0) (4,1) (4,2) (4,3).
+
+   Glyphs can also just be a dot, which is assumed to be a sentance separator.
 -}
 data Glyph e
   = PeriodGlyph

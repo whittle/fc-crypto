@@ -51,8 +51,10 @@ library
                        FcCrypto.Diagram
                        FcCrypto.Glyph
                        FcCrypto.Glyph.Diagram
-                       FcCrypto.Glyph.Known
                        FcCrypto.Glyph.Parser
+                       FcCrypto.Symbol
+                       FcCrypto.Symbol.Diagram
+                       FcCrypto.Symbol.Known
 
 executable fc-crypto
   import:              common-options

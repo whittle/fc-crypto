@@ -11,7 +11,6 @@ import RIO
 import Data.List.Split (chunksOf)
 import Diagrams
 import Diagrams.Backend.SVG (B)
-import qualified RIO.Text as T
 
 
 -- Aesthetic constants
@@ -36,6 +35,6 @@ drawGrid k = frame border . vsep leading . map (hsep kerning) . chunksOf k . map
 
 -- | Add a possible label below a diagram. Does not add space below a diagram if
 -- no label is present.
-addLabel :: Maybe Text -> Diagram B -> Diagram B
+addLabel :: Maybe String -> Diagram B -> Diagram B
 addLabel Nothing = id
-addLabel (Just l) = extrudeEnvelope unit_Y . (=== alignedText 0.5 1 (T.unpack l))
+addLabel (Just l) = extrudeEnvelope unit_Y . (=== alignedText 0.5 1 l)

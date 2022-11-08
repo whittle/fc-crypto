@@ -6,9 +6,10 @@ import RIO hiding (view)
 import Control.Lens
 import Data.Array (listArray)
 import Data.Attoparsec.Text (endOfInput, parseOnly)
-import qualified FcCrypto.Glyph.Known as Known
 import FcCrypto.Glyph (Glyph(..), glyphBounds, horizontals, verticals)
 import FcCrypto.Glyph.Parser
+import FcCrypto.Symbol (Symbol(..))
+import qualified FcCrypto.Symbol.Known as Known
 import Test.Tasty.HUnit
 
 
@@ -16,14 +17,14 @@ unit_parsePeriod :: IO ()
 unit_parsePeriod = parseOnly (glyph glyphBounds) ".\n" @?= Right PeriodGlyph
 
 unit_parseYo :: IO ()
-unit_parseYo = parseOnly (glyph glyphBounds) yoText @?= Right Known.yo
+unit_parseYo = parseOnly (glyph glyphBounds) yoText @?= Right (symbolGlyph Known.yo)
 
 unit_parseCo :: IO ()
-unit_parseCo = parseOnly (glyph glyphBounds) coText @?= Right Known.co
+unit_parseCo = parseOnly (glyph glyphBounds) coText @?= Right (symbolGlyph Known.co)
 
 unit_parseYoDotCo :: IO ()
 unit_parseYoDotCo = parseOnly (glyphs glyphBounds) (yoText<>"\n.\n\n"<>coText)
-             @?= Right [Known.yo, PeriodGlyph, Known.co]
+                @?= Right [symbolGlyph Known.yo, PeriodGlyph, symbolGlyph Known.co]
 
 unit_parse1 :: IO ()
 unit_parse1 = parseOnly (termLine (0,3) <* endOfInput) "*           *\n"

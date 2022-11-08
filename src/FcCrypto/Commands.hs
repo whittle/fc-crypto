@@ -10,10 +10,11 @@ module FcCrypto.Commands
 import RIO
 import Diagrams
 import Diagrams.Backend.SVG.CmdLine (B)
-import FcCrypto.Diagram (addLabel, drawGrid)
-import FcCrypto.Glyph (Glyph)
+import FcCrypto.Diagram (drawGrid)
 import FcCrypto.Glyph.Diagram (drawGlyph)
-import qualified FcCrypto.Glyph.Known as Known
+import FcCrypto.Symbol (Symbol(..))
+import FcCrypto.Symbol.Diagram (drawSymbol)
+import qualified FcCrypto.Symbol.Known as Known
 import FcCrypto.Glyph.Parser (parseOnlyGlyphs)
 
 
@@ -21,24 +22,18 @@ import FcCrypto.Glyph.Parser (parseOnlyGlyphs)
 labelKnown :: FilePath -> Int -> IO (Diagram B)
 labelKnown fp k = do
   input <- readFileUtf8 fp
-  gs <- either fail return $ parseOnlyGlyphs input
-  let lgs = (id &&& Known.identify) <$> gs
-  return $ drawGrid k $ map drawLabeledGlyph lgs
+  gs <- either fail pure $ parseOnlyGlyphs input
+  pure $ drawGrid k $ map drawSymbol $ Known.identify <$> gs
 
 -- | Render the known glyphs with their labels.
 listKnown :: Int -> IO (Diagram B)
 listKnown k =
-  return $ drawGrid k $ map (drawLabeledGlyph . second Just) Known.all
+  pure $ drawGrid k $ map (drawSymbol . f) Known.all
+  where f (Symbol (Identity m) g) = Symbol (Just m) g
 
 -- | Render the original message with no attempt to solve it.
 renderMessage :: FilePath -> Int -> IO (Diagram B)
 renderMessage fp k = do
   input <- readFileUtf8 fp
   gs <- either fail return $ parseOnlyGlyphs input
-  return $ drawGrid k $ map drawGlyph gs
-
-
--- Helpers
-
-drawLabeledGlyph :: (Glyph Bool, Maybe Text) -> Diagram B
-drawLabeledGlyph (g, l) = addLabel l $ drawGlyph g
+  pure $ drawGrid k $ map drawGlyph gs
